@@ -14,16 +14,26 @@ std::wstring to_string(const TokenType type);
 class Token {
 	TokenType myType;
 	Chain content;
+	/* nawet jak wiemy dokładnie jakim jest symbolem
+	 * np TokenType::keyword i 
+	 * KeywordType::t_end, to i tak przechowujemy
+	 * przeparsowany tekst */
 	union {
 		KeywordType keyword;
 		OperatorType op;
 	};
+	/* jeśli nie jest ani keywordem ani opem, to ta unia
+	 * jest niepotrzebna i są w niej śmieci
+	 * jeśli jest keywordem to op jest śmieciem itd. */
 	public:
 	Token(const TokenType myType, const Chain & content):
 		myType(myType),
 		content(content)
 		{
-		analize();
+		analize(); //tu robimy "dekorację"
+		/* bo metoda scan nie rozróżnia keywordów od idów
+		 * i nie rozpoznaje poszczególnych operatorów,
+		 * to jest robione tutaj */
 		}
 	std::wstring to_string() const;
 	void analize();

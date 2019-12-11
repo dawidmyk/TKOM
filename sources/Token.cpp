@@ -24,6 +24,11 @@ std::string Token::to_string() const {
 void Token::analize() {
 		if(myType == TokenType::id) {
 			KeywordType type = key_filtr(content);
+			/* jeśli none to nie ma takiego keywordu
+			 * więc to jednak był id
+			 * post parser dopiero wykryje użycie
+			 * nie zadeklarowanego id */
+			
 			if(type != KeywordType::t_none) {
 				keyword = type;
 				myType = TokenType::keyword;

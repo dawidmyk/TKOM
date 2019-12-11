@@ -11,6 +11,9 @@ int main(int count, char * args[]) {
 	#ifdef WIDE
 	setLocale();
 	#endif
+	Source::setTabWidth(4);
+	/* dobrze jest to wyrzucić do funkcji w mainie
+	 * bo może często to trzeba będzie zmieniać */
 	Operators::start();
 	FileHandle handle(args[1]);
 	if(!handle.isValid()) {

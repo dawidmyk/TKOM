@@ -12,24 +12,48 @@ void Operators::add(const Chain & str, const Character & one) {
 
 bool Operators::i_joinable(const Chain & str, const Character & i) {
 	if(str.size() == 1) {
+		/* jeśli jest jedno elementowy
+		/* to może siedzieć na liście preceders
+		 * i tam go poszukamy najpierw */
 		Character one = str.at(0);
+		/* konwersja jednoznakowego stringa na znak
+		 * i niejawny konstr Charactera */
 		auto it = preceders.find(i);
+		//zwraca się iterator na tuplę
 		if(it->second == one) return true;
+		/* preceders jest puste, ale się nie
+		 * wywala :0 ;
+		 * ta mapa jest "w tył"
+		 * następnikowi przypisuje poprzednika */
 	}
 	auto it = options.find(str);
+	/* tu zwraca iterator podobnie jak wyżej */
 	if(it == options.end()) return false;
+	/* nie ma takiego klucza, on będzie w scanie najpierw
+	 * chciał pushować a potem zobaczy przy i=='\0', że dalej
+	 * jest false, i wtedy zrozumie, że jest błędny operator */
 	if(i == '\0' && it->second.isSolitude()) return true;
+	/* jest klucz, Continue jest solitude, to znaczy że 
+	 * nie wymaga kontynuacji */
 	if(it->second.continuee(i)) return true;
+	/* najpostszy przypadek, po prosty dołożony znak,
+	 * tworzy nowy operator z dotychczasowego */
+	return false;
 }
 
 #ifdef WIDE
 void Operators::hardcode() {
-	Chain defaults(L"+-←→↓↑*/\\;:·.!¡?#^@¬'«»|");
+	Chain defaults(L"=+-←→↓↑*/\\;:·.!¡?#^@¬'«»|");
+	//wszystkie jednoznakie tworzące stringi klucze
+	//w Operators::instance.options
 
 	addDefaults(defaults);
 	Continues modulo;
 	//modulo.setNotSolitude();
+	//bo jednak sam % jest ok
 	modulo.addChain(L"↓↑|");
+	//każdy z powyższych znaków może być
+	//kontynuacją %
 	
 	add(L"%", modulo);
 	Continues modulo_with;
@@ -38,6 +62,7 @@ void Operators::hardcode() {
 	add(L"%|", modulo_with);
 	
 	add(L"-", '>');
+	//> może być kontynuacją -
 	
 	Continues left_arrow;
 	left_arrow.setNotSolitude();
@@ -49,6 +74,14 @@ void Operators::hardcode() {
 	power.addChar('>');
 	add(L">", power);
 	
+	/* Na końcu dodajemy
+	 * możliwe końcówki
+	 * sprawnych operatorów
+	 * bo jak joinable nie znajdzie ich
+	 * w Operators::instance.options
+	 * to zwróci false
+	 * i potem scan będzie myśleć
+	 * że są błędne */
 	add(L"->", Continues());
 	add(L"<-", Continues());
 	add(L"<<", Continues());
@@ -105,7 +138,7 @@ void Continues::pour() {
 	freopen(nullptr, "w", stdout);
 	#endif
 	for(auto & i : options) {
-		#ifdef WINE
+		#ifdef WIDE
 		printf("%c\n", i.getChar());
 		#else
 		wprintf(L"%lc\n", i.getChar());
@@ -120,13 +153,16 @@ void Operators::pour(const Chain & str) {
 	printf("For %s:\n\n", str.c_str());
 	#endif
 	Continues a = instance.options.at(str);
-	//on tu wyjątas rzuci jeśli nie ma
+	//on tu wyjątek rzuci jeśli nie ma
 	a.pour();
 }
 
 void Operators::pour() {
 	printf("Oto wszystkie:\n");
 	#ifdef WIDE
+	/* podobno między użyciem strumienia
+	 * metodami "w..." a zwykłymi
+	 * trzeba zrobić reotwarcie strumienia */
 	freopen(nullptr, "w", stdout);
 	#endif
 	for(auto i : instance.options) {

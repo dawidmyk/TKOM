@@ -2,6 +2,8 @@
 #include <string>
 #include <cctype>
 class Character {
+	/* metody is... oraz getChar używane
+	 * są w funkcji scan */
 	char internal;
 	bool eof;
 	public:
@@ -37,11 +39,14 @@ class Character {
 		return (internal == '\t');
 		//ale to może się zmienić
 	}
+	/* Trzy ostatnie funkcje dla "dekoratora" w metodzie
+	Source::getNextChar */
 	bool operator < (const Character & other) const {
 		if(eof && !other.eof) return true;
 		if(!eof && other.eof) return false;
 		return (internal < other.internal);
 	}
+	// Powyższa metoda żeby można było zrobić set
 	bool operator == (const Character & other) const {
 		return (internal == other.internal && eof == other.eof);
 	}
@@ -49,7 +54,7 @@ class Character {
 
 inline bool isWhite(const Character & current) {
 	return (current.isEnd() || current.isSpace());
-}
+} //także użyta w scan
 class Chain : public std::string {
 	public:
 	Chain() {}

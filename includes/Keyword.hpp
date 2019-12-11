@@ -8,4 +8,5 @@ enum class KeywordType {
 };
 
 KeywordType key_filtr(const Chain & str);
-
+/* rozpoznaje czy jest keywordem
+ * i zwraca odpowiedni symbol */

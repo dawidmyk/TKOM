@@ -1,6 +1,7 @@
 #pragma once
 #include <cwctype>
 #include <string>
+//Patrz komentarze do Character.cpp
 class Character {
 	wchar_t internal;
 	bool eof;

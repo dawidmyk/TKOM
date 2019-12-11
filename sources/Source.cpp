@@ -3,6 +3,8 @@ int Source::tabWidth;
 
 const int Source::critical = 30;
 Character Source::getNextChar() {
+	//dekorator nextChar -> getNextChar
+	//ale nie można było przeciążyć nazwy
 	Character current = nextChar();
 	readed++;
 	if(current.isVertical()) {

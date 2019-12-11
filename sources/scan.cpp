@@ -6,8 +6,11 @@ bool scan(Source & source, TokenList & result) {
 	State actualState = State::non;
 	TokenType nextType;
 	Character current;
+	/* dzięki temu że trzymamy go tu, nie musimy go trzymać w
+	 * Sourc'ie */
 	int limit = 1;
-	bool limitAchieved = false;
+	bool limitAchieved = false; //czy zebrało się za dużo znaków
+	//w tokenie
 	int nested = 0; //zagnieżdżanie komentarzy jest możliwe
 	//ale to jest zrobione poza gramatyką jakąkolwiek
 	while(actualState != State::exit && actualState != State::error) {
@@ -65,6 +68,13 @@ bool scan(Source & source, TokenList & result) {
 						 * komentarza nic nie robi*/
 						else nextType = TokenType::op;
 					}
+					else actualState = State::non;
+					/* powyższe jest bardzo ważne, bo pozwoli odrzucić wszystkie znaki
+					 * które są niewiadomo czym (i nie będą one powodowały błędu)
+					 * po prostu je olejemy
+					 * np. jakieś znaki o numerze ascii 1 (oczywiście co innego
+					 * będzie przy opcji WIDE), tak więc możemy się spodziewać że
+					 * przy nieustawionym WIDE oleje albo przekręci różne ś albo ↑ */
 					if(nextType != TokenType::comment && actualState == State::item)
 						/* komentarz jest tokenem, który także zbieramy
 						 * ale nie zbieramy do niego tych [] które go
@@ -89,9 +99,11 @@ bool scan(Source & source, TokenList & result) {
 					}
 				}
 				else if(isWhite(current)) actualState = State::push;
+				/* był item, a teraz jest spacja, trzeba go wysłać,
+				 * bo wiadomo że teraz się skończył */
 				else if(current.isOp()) { 
 					if(nextType == TokenType::op && Operators::joinable(actual, current))
-						//a +='3 -> to są 2 operatory: += oraz '
+						//a +='3 -> to są 3 operatory: + = oraz '
 						actual.append(current);
 					else actualState = State::push;
 				}

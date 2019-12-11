@@ -22,6 +22,7 @@ std::wstring Token::to_string() const {
 }
 
 void Token::analize() {
+		//patrz komentarz w Token.cpp
 		if(myType == TokenType::id) {
 			KeywordType type = key_filtr(content);
 			if(type != KeywordType::t_none) {

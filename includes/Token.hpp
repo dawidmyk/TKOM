@@ -5,6 +5,7 @@
 #include "Character.hpp"
 #include "Keyword.hpp"
 #include "Operators.hpp"
+//Patrz komentarze do WideToken.hpp
 enum class TokenType {
 	id, op, keyword, nume, comment, mistake
 };
@@ -41,6 +42,7 @@ class TokenList {
 		}
 	}
 	Token last() const {
+		//no bo ten ostatni to może być ten błędny
 		return list.at(list.size() - 1);
 	}
 			
