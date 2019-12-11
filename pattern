@@ -1,0 +1,11 @@
+builds/lexer: $(OBJ)
+	g++ $(CPPFLAGS) $(OBJ) -o $@
+	
+builds/%.o: sources/%.cpp includes/*.hpp
+	g++ $(CPPFLAGS) -c $< -o $@
+
+clean_obj:
+	rm builds/*.o
+	
+clean_app:
+	rm builds/lexer

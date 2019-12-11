@@ -1,0 +1,46 @@
+wide=false
+cppflags="CPPFLAGS=-std=c++17 -Iincludes"
+if test "$1" = '-debug' -o "$2" = '-debug'
+then
+cppflags="${cppflags} -g"
+fi
+if test "$1" = '-wide' -o "$2" = '-wide'
+then
+cppflags="${cppflags} -DWIDE"
+wide=true
+fi
+objects="OBJ="
+n=begin
+for i in sources/*.cpp
+do
+	if test $n = begin
+	then
+		space=""
+		n=notbegin
+	else
+		space=" "
+	fi
+	stem=`echo $i | cut -f 1 -d '.'`
+	stem=`echo $stem | cut -f 2 -d '/'`
+	if ! test '(' $wide = true -a $stem = Token ')' \
+		-o '(' $wide = false -a $stem = WideToken ')'
+	then
+		objects="${objects}${space}builds/${stem}.o"
+	fi
+done
+touch includes/*.hpp
+touch sources/*.cpp
+echo -n "" > Makefile
+echo $cppflags >> Makefile
+echo $objects >> Makefile
+echo "" >> Makefile
+
+IFS=' '
+{
+while read x
+do
+	echo "$x" >> Makefile
+done
+} < pattern
+
+

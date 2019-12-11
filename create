@@ -1,0 +1,1 @@
+g++ -std=c++17 -Iincludes -DWIDE -o builds/lexer sources/*.cpp -g
